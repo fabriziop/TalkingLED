@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map For talkingLED
+#######################################
+
+#######################################
+# Datatypes             (KEYWORD1)
+#######################################
+
+TalkingLED               KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin                    KEYWORD2
+message                  KEYWORD2
+sequence                 KEYWORD2
+update                   KEYWORD2
+delay                    KEYWORD2
+waitEnd                  KEYWORD2
+set                      KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################

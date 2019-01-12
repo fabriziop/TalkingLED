@@ -1,0 +1,17 @@
+{
+    "name": "Talking LED",
+    "keywords": "display, board led",
+    "description": "Make your system to display message by LED blinking.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fabriziop/TalkingLED.git"
+    },
+    "version": "0.1.0",
+    "exclude": "tests",
+    "examples": "examples/*/*.ino",
+    "frameworks": "arduino",
+    "platforms": [
+        "atmelavr",
+        "espressif"
+    ]
+}
