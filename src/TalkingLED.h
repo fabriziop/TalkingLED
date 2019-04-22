@@ -36,6 +36,7 @@ class TalkingLED {
   boolean begin(uint8_t aLEDPin);
   boolean update(void);
   void delay(uint32_t aDelay);
+  void set(uint8_t aLEDStatus);
   void waitEnd(void);
   boolean message(uint8_t aMessagedCode);
   boolean sequence(uint16_t *aSequence);

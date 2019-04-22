@@ -109,7 +109,7 @@ void TalkingLED::delay(uint32_t aDelay) {
 }
 
 
-void TalkingLED::set(unit8_t aLEDStatus) {
+void TalkingLED::set(uint8_t aLEDStatus) {
   LEDStatus = aLEDStatus;
   digitalWrite(LEDStatus,LEDPin);
   sequence_ = NULL;
