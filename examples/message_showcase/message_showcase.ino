@@ -39,7 +39,7 @@ void loop() {
   for (int m=1; m <= TLED_MESSAGE_CODE_MAX; m++) {
     TLED.message(m);
     TLED.waitEnd();
-
+  }
 }
 
 //// END
