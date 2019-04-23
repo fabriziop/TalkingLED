@@ -263,7 +263,23 @@ Send wishes, comments, patches, etc. to f.pollastri_a_t_inrim.it .
 Change Log
 ==========
 
-2019-01-13 First release.
+commit 9c9a855e8de14c3bd63fa8efdbb393ff2e761a79
+Author: Fabrizio Pollastri <mxgbot@gmail.com>
+Date:   Tue Apr 23 00:35:03 2019 +0200
+
+    Fix a missing close brace into 'message_showcase' example.
+
+commit 60d3f4c4717416ba8133b12c125bbe9c96c2f923
+Author: Fabrizio Pollastri <mxgbot@gmail.com>
+Date:   Mon Apr 22 19:50:53 2019 +0200
+
+    Fix 'set' function: type typo and missing prototype.
+
+commit 8298e04cc3a5e7eae5ff73af7171bb542c7207ba
+Author: Fabrizio Pollastri <mxgbot@gmail.com>
+Date:   Sun Jan 13 00:38:56 2019 +0100
+
+    First release.
 
 
 Copyright
