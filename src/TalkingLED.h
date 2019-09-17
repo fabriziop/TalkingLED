@@ -60,4 +60,6 @@ class TalkingLED {
    boolean _build_message_sequence(uint8_t aMessageCode);
 };
 
-#endif //  TALKING_LED_H
+#endif // TALKING_LED_H
+
+/**** END ****/

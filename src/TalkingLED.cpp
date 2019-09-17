@@ -111,7 +111,7 @@ void TalkingLED::delay(uint32_t aDelay) {
 
 void TalkingLED::set(uint8_t aLEDStatus) {
   LEDStatus = aLEDStatus;
-  digitalWrite(LEDStatus,LEDPin);
+  digitalWrite(LEDPin,LEDStatus);
   sequence_ = NULL;
   sequenceCurrent = NULL;
   messageCode = 0;
@@ -137,4 +137,4 @@ boolean TalkingLED::_build_message_sequence(uint8_t aMessageCode) {
   return true;
 }
 
-//// END
+/**** END ****/
