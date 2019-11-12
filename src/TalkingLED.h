@@ -16,8 +16,8 @@
 
 #include "Arduino.h"
 
-#define TLED_ON LOW
-#define TLED_OFF HIGH
+#define TLED_ON HIGH
+#define TLED_OFF LOW
 
 #define TLED_MESSAGE_CODE_MAX 19
 #define TLED_LONG_BLINK_UNITS 4

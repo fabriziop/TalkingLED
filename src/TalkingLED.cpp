@@ -78,8 +78,8 @@ boolean TalkingLED::update(void) {
     if (messageCodeCurrent != messageCode) {
       messageCodeCurrent = messageCode;
       _build_message_sequence(messageCodeCurrent);
-      sequence_ = messageSequence;
     }
+    sequence_ = messageSequence;
   }
   sequenceCurrent = sequence_;
   i = 0;
