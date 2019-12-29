@@ -25,11 +25,7 @@
 
 
 TalkingLED::TalkingLED(void) {
-}
-
-
-boolean TalkingLED::begin(uint8_t aLEDPin) {
-  LEDPin = aLEDPin;
+  LEDPin = LED_PIN;
   LEDStatus = TLED_OFF;
   digitalWrite(LEDPin,LEDStatus);
   pinMode(LEDPin,OUTPUT);
@@ -39,6 +35,16 @@ boolean TalkingLED::begin(uint8_t aLEDPin) {
   sequenceCurrent = NULL;
   sequenceEnd = false;
   i = 0;
+}
+
+
+boolean TalkingLED::begin() {
+  return true;
+}
+
+
+boolean TalkingLED::begin(uint8_t aLEDPin) {
+  LEDPin = aLEDPin;
   return true;
 }
 

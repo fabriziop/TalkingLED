@@ -16,8 +16,17 @@
 
 #include "Arduino.h"
 
-#define TLED_ON HIGH
-#define TLED_OFF LOW
+#ifdef __AVR__
+  #define TLED_ON HIGH
+  #define TLED_OFF LOW
+  #define LED_PIN 13
+#elif ESP8266
+  #define TLED_ON LOW
+  #define TLED_OFF HIGH
+  #define LED_PIN 2
+#else
+  #error TalkingLED: unsupported processor.
+#endif
 
 #define TLED_MESSAGE_CODE_MAX 19
 #define TLED_LONG_BLINK_UNITS 4
@@ -33,6 +42,7 @@ class TalkingLED {
 
  public:
   TalkingLED(void);
+  boolean begin();
   boolean begin(uint8_t aLEDPin);
   boolean update(void);
   void delay(uint32_t aDelay);

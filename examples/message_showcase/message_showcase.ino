@@ -21,15 +21,11 @@ description
 #include <TalkingLED.h>
 TalkingLED TLED;
 
-// define here LED pin number 
-//#define LED_PIN 13    // on board LED for arduinos
-//#define LED_PIN 2    // on board LED for ESP8266 nodeMCU
-
 
 void setup() {
 
   // init Talking LED
-  TLED.begin(LED_PIN);
+  TLED.begin();
 
 }
 

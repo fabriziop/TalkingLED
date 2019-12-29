@@ -21,10 +21,6 @@ description
 #include <TalkingLED.h>
 TalkingLED TLED;
 
-// define here LED pin number 
-//#define LED_PIN 13    // on board LED for arduinos
-//#define LED_PIN 2    // on board LED for ESP8266 nodeMCU
-
 // LED blink sequences A and B (final zero is sequence terminator)
 // A: on for 500 ms, off for 500 ms, blink @1Hz with 50% duty cycle.
 uint16_t aSequence[3] = {500,500,0};
@@ -35,7 +31,7 @@ uint16_t bSequence[7] = {250,250,250,250,0};
 void setup() {
 
   // init Talking LED
-  TLED.begin(LED_PIN);
+  TLED.begin();
 
 }
 
