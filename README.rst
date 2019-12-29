@@ -263,6 +263,7 @@ Send wishes, comments, patches, etc. to f.pollastri_a_t_inrim.it .
 Copyright
 =========
 
-TalkingLED is authored by Fabrizio Pollastri <mxgbot_a_t_gmail.com>, year 2018, under the GNU General Public License version 3.
+TalkingLED is authored by Fabrizio Pollastri <mxgbot_a_t_gmail.com>, year 2018,
+under the GNU Lesser General Public License version 3.
 
 .. ==== END
