@@ -5,7 +5,7 @@
 .kind       : c++ include
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
-.creation   : 3-12-2018
+.creation   : 3-Dec-2018
 .copyright  : (c) 2018 Fabrizio Pollastri
 
 .- */
@@ -14,7 +14,7 @@
 #ifndef TALKING_LED_H
 #define TALKING_LED_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 #ifdef __AVR__
   #define TLED_ON HIGH
@@ -28,28 +28,36 @@
   #error TalkingLED: unsupported processor.
 #endif
 
-#define TLED_MESSAGE_CODE_MAX 19
+#define TLED_MORSE_CODE_MAX 19
 #define TLED_LONG_BLINK_UNITS 4
 #define TLED_LONG_BLINK_ON_TIME 600
 #define TLED_LONG_BLINK_OFF_TIME 400
 #define TLED_SHORT_BLINK_ON_TIME 200
 #define TLED_SHORT_BLINK_OFF_TIME 200
+#define TLED_NIBBLE_OFF_TIME 600
 #define TLED_MESSAGE_END_OFF_TIME 1000
 #define TLED_DELAY_STEP 20
+
+enum TalkingLEDMessageType {
+  TLED_MORSE,
+  TLED_BYTE,
+  TLED_NIBBLE,
+};
 
 
 class TalkingLED {
 
  public:
   TalkingLED(void);
-  boolean begin();
-  boolean begin(uint8_t aLEDPin);
-  boolean update(void);
+  bool begin();
+  bool begin(uint8_t aLEDPin);
+  bool update(void);
   void delay(uint32_t aDelay);
-  void set(uint8_t aLEDStatus);
+  void setLED(uint8_t aLEDStatus);
   void waitEnd(void);
-  boolean message(uint8_t aMessagedCode);
-  boolean sequence(uint16_t *aSequence);
+  bool setMessage(uint8_t aMessagedCode,
+    enum TalkingLEDMessageType aMessageType = TLED_NIBBLE);
+  bool setSequence(uint16_t *aSequence);
   void on(void);
   void off(void);
 
@@ -58,16 +66,18 @@ class TalkingLED {
    uint8_t LEDStatus;
    uint16_t messageSequence[28] =
      {50,50,50,50,50,500,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-   uint8_t messageCode;
+   uint8_t messageCodeNext;
+   enum TalkingLEDMessageType messageTypeNext;
    uint8_t messageCodeCurrent;
-   uint8_t i, j;
-   uint16_t *sequence_;
+   enum TalkingLEDMessageType messageTypeCurrent;
+   uint16_t *sequenceNext;
    uint16_t *sequenceCurrent;
+   uint16_t *sequence;
    uint32_t now;
-   uint32_t nextChange;
+   uint32_t nextChangeTime;
    uint32_t delayEnd;
-   boolean sequenceEnd;
-   boolean _build_message_sequence(uint8_t aMessageCode);
+   bool sequenceEnd;
+   bool _build_message_sequence();
 };
 
 #endif // TALKING_LED_H

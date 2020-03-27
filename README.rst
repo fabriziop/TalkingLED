@@ -7,14 +7,14 @@ TalkingLED, LED blinking made easy.
 TalkingLED allows to decouple blinking timings from application timings,
 making application flow structure simpler.
 
-LED blinking is the esiest way for an Arduino board to communicate. Several
-messages can be sent by realizing more or less complex on/off timings. The
-on/off timings need to be implemented by the application running on Arduino
-board. Generally, LED blinking happens for the most part of application run
-time: for example, to signal a normal run condition. This means that LED
-blinking operation are tightly interleaved with application execution flow
-and timing, making it more complex. TalkingLED can be used to reduce this
-complexity.
+LED blinking is the esiest way for an Arduino board to communicate. Status
+codes, error codes, numbers, binary patterns can be displayed by realizing
+more or less complex on/off timings. This on/off timings need to be implemented
+by the application running on the Arduino board. Generally, LED blinking happens
+for the most part of application run time: for example, to signal a normal
+run condition. This means that LED blinking operations are tightly interleaved
+with the application execution flow and timing, making it more complex.
+TalkingLED can be used to reduce this complexity.
 
 
 Features
@@ -22,7 +22,8 @@ Features
 
 * Data defined blink sequences
 * Simple cooperative application/TalkingLED interaction model
-* Builtin encoded messaging with intuitive blink sequences 
+* Small numbers (<20) morse-like encoding with intuitive blink sequences 
+* Binary encoding with simple blink sequences for bytes and nibbles 
 * No multithread needed
 * No interrupts needed
 * No external dependencies
@@ -59,7 +60,7 @@ running.
 
     // init TalkingLED
     TLED.begin();
-    TLED.sequence(blinkSequence);
+    TLED.setSequence(blinkSequence);
 
     // application code
     ...
@@ -112,20 +113,19 @@ running.
   }
 
 
-
 Blink sequence definition
 =========================
 
 Blink sequences are defined by arrays of unsigned 16 bits integers.
 Each array element sets the period in milliseconds of a LED status.
-Even index array elements sets LED on statuses, odd index array elements
-set LED off statuses. The last element array must be set to zero as
-sequence terminator. Since sequence elements are unsigned 16 bits integers and
-zero value is used as terminator, the allowable period value range from 1 to
-65535 milliseconds. The status sequence is applied to LED
-from first to last element cyclically, until a new sequence is defined (call
-to methods sequence, message) or some TalkingLED methods (set, waitEnd)
-that stop the blink cycle are called.
+Even index array elements sets the periods of LED on statuses, odd index
+array elements set the periods of LED off statuses. The last element array
+must be set to zero as sequence terminator. Since sequence elements are
+unsigned 16 bits integers and zero value is used as terminator, the
+allowable period value range from 1 to 65535 milliseconds. The status
+sequence is applied to LED from first to last element cyclically, until
+a new sequence is defined (calls to methods setSequence, setMessage) or
+some TalkingLED methods (setLED) that stop the blink cycle are called.
 
 .. code:: cpp
 
@@ -140,10 +140,19 @@ that stop the blink cycle are called.
   uint16_t example2Sequence[11] = {100,500,200,500,300,500,400,500,500,500,0};
 
 
-TalkingLED message code
-=======================
+TalkingLED encoding
+===================
 
-TalkingLED has a builtin messaging capability that display a message code
+TalkingLED has a builtin encoding capability using blink sequences computed
+from given code number or from given binary data. Different types of
+encoding are available: a morse-like encoding and a binary nibble or binary
+byte encoding.
+
+
+Morse-like encoding
+-------------------
+
+The morse-like encoding is able to display a message code
 in the range 1 - 19. Each code is rendered by a blink sequence starting
 with 3 very short LED on pulses (100 ms), followed by the message code
 displayed with long (600 ms) and short (200 ms) on pulses and terminated
@@ -167,10 +176,42 @@ code blink sequence, on pulses
 6    long short short
 7    long short short short
 8    long long
-...  ...
+...        ...
 18   long long long long short short
 19   long long long long short short short
 ==== =====================================
+
+
+Binary byte encoding
+--------------------
+
+This type of encoding displays the content of a byte in binary form.
+The byte content is rendered by a blink sequence starting with 3 short LED
+pulses (100 ms), followed by 8 LED pulses, one for each bit: a long pulse
+(600 ms) for one bits, a short pulse (200 ms) for zero bits. The sequence of
+bit pulses goes from the most significant bit to the least significant bit.
+Between the first 4 pulses and the last 4, there is a 600 ms interval.
+
+========= ================================================
+Encoding scheme: byte vs blink sequence
+------------------------------------------
+byte      blink sequence, on pulses
+========= ================================================
+0000 0000 short short short short  short short short short
+0000 0001 short short short short  short short short long
+0000 0010 short short short short  short short long  short
+   ...                          ...
+1111 1110 long  long  long  long   long  long  long  short     
+1111 1111 long  long  long  long   long  long  long  long     
+========= ================================================
+
+
+Binary nibble encoding
+----------------------
+
+This type of encoding displays the content of a nibble (4 bits) in binary form.
+The encoding scheme is the same given for the binary byte, but only the 4
+least significant bits of the byte are displayed.
 
 
 Module reference
@@ -179,6 +220,7 @@ Module reference
 TalkingLED is implemented as C++ class. A TalkingLED object needs to be
 instantiated and associated to the LED to be blinked. This object has a
 set of methods for managing the LED blink sequences.
+
 
 Objects and methods
 -------------------
@@ -195,14 +237,21 @@ boolean **begin(** uint8_t **LEDPin)**
   **LEDPin**: number of pin connected to LED.
 
 
-boolean **message(** uint8_t **aMessageCode)**
+boolean **setMessage(** uint8_t **aMessageCode**,
+    enum TalkingLEDMessageType **aMessageType** = TLED_BIN_NIBBLE);
 
-  This method sets the message code (range 1-19) to be displayed.
+  This method sets the message code and the encoding type to be displayed.
 
-  **aMessageCode**: message code number.
+  **aMessageCode**: message code number. If encoding type is TLED_MORSE,
+  must be a number in the range 1-19. If encoding type is TLED_BYTE, the
+  whole byte is encoded. If encoding type is TLED_NIBBLE, the 4 least
+  significant bits are encoded.
+
+  **aMessageType**: message encoding type, can be one of TLED_MORSE,
+  TLED_BYTE, TLED_NIBBLE (default TLED_NIBBLE).
  
 
-boolean **sequence(** uint16_t * **aSequence)**
+boolean **setSequence(** uint16_t * **aSequence)**
 
   This method sets the blink sequence to be displayed.
 
@@ -229,12 +278,12 @@ void **delay(** uint32_t **aDelay)**
   **aDelay**: wait delay in milliseconds.
 
 
-void **set(** uint8_t **aLEDStatus)**
+void **setLED(** uint8_t **aLEDStatus)**
 
   This method force the LED to the given status. The current
   sequence/message cycle, if any, is immediately stopped.
 
-  **aLEDStatus**: LED status to be forced: 0 off, 1 on.
+  **aLEDStatus**: LED status to be forced: TLED_OFF for off, TLED_ON for on.
 
 
 Examples
@@ -253,13 +302,13 @@ arduino libraries.
 Contributing
 ============
 
-Send wishes, comments, patches, etc. to f.pollastri_a_t_inrim.it .
+Send wishes, comments, patches, etc. to mxgbot_a_t_gmail.com .
 
 
 Copyright
 =========
 
-TalkingLED is authored by Fabrizio Pollastri <mxgbot_a_t_gmail.com>, year 2018,
-under the GNU Lesser General Public License version 3.
+TalkingLED is authored by Fabrizio Pollastri <mxgbot_a_t_gmail.com>,
+years 2018-2020, under the GNU Lesser General Public License version 3.
 
 .. ==== END

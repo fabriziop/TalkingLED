@@ -5,7 +5,7 @@
 .kind       : c++ source
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
-.creation   : 3-12-2018
+.creation   : 3-Dec-2018
 .copyright  : (c) 2018 Fabrizio Pollastri
 
 .description
@@ -20,7 +20,6 @@
 
 .- */
 
-
 #include <TalkingLED.h>
 
 
@@ -29,67 +28,63 @@ TalkingLED::TalkingLED(void) {
   LEDStatus = TLED_OFF;
   digitalWrite(LEDPin,LEDStatus);
   pinMode(LEDPin,OUTPUT);
-  messageCode = 0;
+  messageCodeNext = 0;
   messageCodeCurrent = 0;
-  sequence_ = NULL;
+  sequenceNext = NULL;
   sequenceCurrent = NULL;
+  sequence = NULL;
   sequenceEnd = false;
-  i = 0;
 }
 
 
-boolean TalkingLED::begin() {
+bool TalkingLED::begin() {
   return true;
 }
 
 
-boolean TalkingLED::begin(uint8_t aLEDPin) {
+bool TalkingLED::begin(uint8_t aLEDPin) {
   LEDPin = aLEDPin;
   return true;
 }
 
 
-boolean TalkingLED::message(uint8_t aMessageCode) {
-  messageCode = aMessageCode;
-  sequence_ = NULL;
+bool TalkingLED::setMessage(uint8_t aMessageCode,
+  TalkingLEDMessageType aMessageType) {
+  messageCodeNext = aMessageCode;
+  messageTypeNext = aMessageType;
+  return _build_message_sequence();
+}
+
+
+bool TalkingLED::setSequence(uint16_t *aSequence) {
+  sequenceNext = aSequence;
   return true;
 }
 
 
-boolean TalkingLED::sequence(uint16_t *aSequence) {
-  sequence_ = aSequence;
-  messageCode = 0;
-  return true;
-}
-
-
-boolean TalkingLED::update(void) {
+bool TalkingLED::update(void) {
   now = millis();
-  if (sequenceCurrent) {
-    if (now < nextChange)
+  if (sequence) {
+    if (now < nextChangeTime)
       return false;
     else {
-      sequenceEnd = false;
-      if (sequenceCurrent[i]) {
+      if (*sequence) {
         LEDStatus ^= 0x1;
         digitalWrite(LEDPin,LEDStatus);
-        nextChange = now + sequenceCurrent[i++];
+        nextChangeTime = now + *sequence++;
+        sequenceEnd = false;
         return true;
       }
       else
 	sequenceEnd = true;
     }
   }
-  if (messageCode) {
-    if (messageCodeCurrent != messageCode) {
-      messageCodeCurrent = messageCode;
-      _build_message_sequence(messageCodeCurrent);
-    }
-    sequence_ = messageSequence;
+  if (sequenceNext) {
+    sequenceCurrent = sequenceNext;
+    sequenceNext = NULL;
   }
-  sequenceCurrent = sequence_;
-  i = 0;
-  nextChange = now;
+  sequence = sequenceCurrent;
+  nextChangeTime = now;
   return false;
 }
 
@@ -100,7 +95,6 @@ void TalkingLED::waitEnd() {
     ::delay(TLED_DELAY_STEP);
   }
   sequenceEnd = false;
-  sequenceCurrent = NULL;
 }
 
 
@@ -115,31 +109,69 @@ void TalkingLED::delay(uint32_t aDelay) {
 }
 
 
-void TalkingLED::set(uint8_t aLEDStatus) {
+void TalkingLED::setLED(uint8_t aLEDStatus) {
   LEDStatus = aLEDStatus;
   digitalWrite(LEDPin,LEDStatus);
-  sequence_ = NULL;
+  sequenceNext = NULL;
   sequenceCurrent = NULL;
-  messageCode = 0;
-  messageCodeCurrent = 0;
+  sequence = NULL;
 }
 
 
-boolean TalkingLED::_build_message_sequence(uint8_t aMessageCode) {
-  messageCode = aMessageCode;
-  if (messageCode > TLED_MESSAGE_CODE_MAX)
-    return false;
-  int i = 6;
-  for (int j=0; j < messageCode / TLED_LONG_BLINK_UNITS; j++) {
-    messageSequence[i++] = TLED_LONG_BLINK_ON_TIME;
-    messageSequence[i++] = TLED_LONG_BLINK_OFF_TIME;
+bool TalkingLED::_build_message_sequence() {
+  uint8_t j,k;
+  uint8_t mask;
+  sequenceNext = messageSequence + 6;
+  switch(messageTypeNext) {
+    case TLED_MORSE:
+      if (messageCodeNext > TLED_MORSE_CODE_MAX)
+        return false;
+      for (j=0; j < messageCodeNext / TLED_LONG_BLINK_UNITS; j++) {
+        *sequenceNext++ = TLED_LONG_BLINK_ON_TIME;
+        *sequenceNext++ = TLED_LONG_BLINK_OFF_TIME;  
+      }
+      for (j=0; j < messageCodeNext % TLED_LONG_BLINK_UNITS; j++) {
+        *sequenceNext++ = TLED_SHORT_BLINK_ON_TIME;
+        *sequenceNext++ = TLED_SHORT_BLINK_OFF_TIME;
+      }
+      break;
+     case TLED_BYTE:
+      mask = 0x80;
+      for (k=0; k < 2; k++) {
+        for (j=0; j < 4; j++) {
+          if (messageCodeNext & mask) {
+            *sequenceNext++ = TLED_LONG_BLINK_ON_TIME;
+            *sequenceNext++ = TLED_LONG_BLINK_OFF_TIME;
+          }
+          else {
+            *sequenceNext++ = TLED_SHORT_BLINK_ON_TIME;
+            *sequenceNext++ = TLED_SHORT_BLINK_OFF_TIME;
+	  }
+          mask >>= 1;
+        }
+	*(--sequenceNext)++ = TLED_NIBBLE_OFF_TIME;
+      }
+      break;
+     case TLED_NIBBLE:
+      mask = 0x08;
+      for (j=0; j < 4; j++) {
+        if (messageCodeNext & mask) {
+          *sequenceNext++ = TLED_LONG_BLINK_ON_TIME;
+          *sequenceNext++ = TLED_LONG_BLINK_OFF_TIME;
+        }
+        else {
+          *sequenceNext++ = TLED_SHORT_BLINK_ON_TIME;
+          *sequenceNext++ = TLED_SHORT_BLINK_OFF_TIME;
+        }
+        mask >>= 1;
+      }
+      break;
+    default:
+      return false;
   }
-  for (j=0; j < messageCode % TLED_LONG_BLINK_UNITS; j++) {
-    messageSequence[i++] = TLED_SHORT_BLINK_ON_TIME;
-    messageSequence[i++] = TLED_SHORT_BLINK_OFF_TIME;
-  }
-  messageSequence[i-1] = TLED_MESSAGE_END_OFF_TIME;
-  messageSequence[i] = 0;
+  *--sequenceNext = TLED_MESSAGE_END_OFF_TIME;
+  *++sequenceNext = 0;
+  sequenceNext = messageSequence;
   return true;
 }
 
