@@ -194,7 +194,7 @@ Between the first 4 pulses and the last 4, there is a 600 ms interval.
 
 ========= ================================================
 Encoding scheme: byte vs blink sequence
-------------------------------------------
+----------------------------------------------------------
 byte      blink sequence, on pulses
 ========= ================================================
 0000 0000 short short short short  short short short short
