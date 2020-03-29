@@ -240,7 +240,7 @@ bool **begin(** uint8_t **LEDPin)**
 
 
 bool **setMessage(** uint8_t **aMessageCode**,
-enum TalkingLEDMessageType **aMessageType** = TLED_BIN_NIBBLE);
+enum TalkingLEDMessageType **aMessageType** = TLED_NIBBLE);
 
   This method sets the message code and the encoding type to be displayed.
 
