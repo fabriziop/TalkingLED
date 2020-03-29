@@ -230,15 +230,17 @@ Objects and methods
   This class embeds all LED blink status info.
 
 
-boolean **begin(** uint8_t **LEDPin)**
+bool **begin(** uint8_t **LEDPin)**
 
-  This method sets the board pin connected to LED to be blinked.
+  This method sets the board pin connected to the LED to be blinked.
 
   **LEDPin**: number of pin connected to LED.
 
+  Returns **true**.
 
-boolean **setMessage(** uint8_t **aMessageCode**,
-    enum TalkingLEDMessageType **aMessageType** = TLED_BIN_NIBBLE);
+
+bool **setMessage(** uint8_t **aMessageCode**,
+enum TalkingLEDMessageType **aMessageType** = TLED_BIN_NIBBLE);
 
   This method sets the message code and the encoding type to be displayed.
 
@@ -249,19 +251,29 @@ boolean **setMessage(** uint8_t **aMessageCode**,
 
   **aMessageType**: message encoding type, can be one of TLED_MORSE,
   TLED_BYTE, TLED_NIBBLE (default TLED_NIBBLE).
+
+  Returns **false** when **aMessageCode** > 19 and **aMessageType** ==
+  TLED_MORSE, or when **aMessageType** is not one of TLED_MORSE, TLED_BYTE,
+  TLED_NIBBLE.
+  Returns **true** otherwise.
  
 
-boolean **setSequence(** uint16_t * **aSequence)**
+bool **setSequence(** uint16_t * **aSequence)**
 
   This method sets the blink sequence to be displayed.
 
   **aSequence**: a pointer to the blink sequence array.
+
+  Returns true.
  
 
-boolean **update(** void **)**
+bool **update(** void **)**
 
   This method update the LED status (on or off) according to the current
   blink sequence/message.
+
+  Returns **true** when LED status is changed.
+  Returns **false** when LED status is not changed.
 
 
 void **waitEnd(** void **)**
