@@ -54,6 +54,7 @@ class TalkingLED {
   bool update(void);
   void delay(uint32_t aDelay);
   void setLED(uint8_t aLEDStatus);
+  bool isEnd(void);
   void waitEnd(void);
   bool setMessage(uint8_t aMessagedCode,
     enum TalkingLEDMessageType aMessageType = TLED_NIBBLE);

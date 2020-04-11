@@ -89,6 +89,11 @@ bool TalkingLED::update(void) {
 }
 
 
+bool TalkingLED::isEnd() {
+  return sequenceEnd;
+}
+
+
 void TalkingLED::waitEnd() {
   while (!sequenceEnd) {
     update();

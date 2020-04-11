@@ -163,11 +163,11 @@ correspends to 4 units. The message code is the sum of all pulse units.
 Long pulses are given first. The timing of the encoding scheme is selected
 to be easily decoded by an unskilled human.
 
-==== =====================================
+==== ==========================================
 Encoding scheme: message code vs blink sequence
-------------------------------------------
+-----------------------------------------------
 code blink sequence, on pulses
-==== =====================================
+==== ==========================================
 1    short
 2    short short
 3    short short short
@@ -179,7 +179,7 @@ code blink sequence, on pulses
 ...        ...
 18   long long long long short short
 19   long long long long short short short
-==== =====================================
+==== ==========================================
 
 
 Binary byte encoding
@@ -217,7 +217,7 @@ least significant bits of the byte are displayed.
 Module reference
 ================
 
-TalkingLED is implemented as C++ class. A TalkingLED object needs to be
+TalkingLED is implemented as a C++ class. A TalkingLED object needs to be
 instantiated and associated to the LED to be blinked. This object has a
 set of methods for managing the LED blink sequences.
 
@@ -269,11 +269,20 @@ bool **setSequence(** uint16_t * **aSequence)**
 
 bool **update(** void **)**
 
-  This method update the LED status (on or off) according to the current
+  This method updates the LED status (on or off) according to the current
   blink sequence/message.
 
   Returns **true** when LED status is changed.
   Returns **false** when LED status is not changed.
+
+
+bool **isEnd(** void **)**
+
+  This method checks for the end of the current cycle of the current
+  sequence/message.
+
+  Returns **true** if the current sequence/message cycle is terminated,
+  otherwise returns **false**.
 
 
 void **waitEnd(** void **)**

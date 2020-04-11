@@ -17,6 +17,7 @@ setMessage	KEYWORD2
 setSequence	KEYWORD2
 update	KEYWORD2
 delay	KEYWORD2
+isEnd	KEYWORD2
 waitEnd	KEYWORD2
 setLED	KEYWORD2
 
