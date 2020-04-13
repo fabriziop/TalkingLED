@@ -75,7 +75,7 @@ class TalkingLED {
    uint16_t *sequenceCurrent;
    uint16_t *sequence;
    uint32_t now;
-   uint32_t nextChangeTime;
+   uint32_t changeTime;
    uint32_t delayEnd;
    bool sequenceEnd;
    bool _build_message_sequence();

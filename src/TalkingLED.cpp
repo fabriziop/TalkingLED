@@ -33,7 +33,8 @@ TalkingLED::TalkingLED(void) {
   sequenceNext = NULL;
   sequenceCurrent = NULL;
   sequence = NULL;
-  sequenceEnd = false;
+  sequenceEnd = true;
+  changeTime = millis();
 }
 
 
@@ -65,13 +66,13 @@ bool TalkingLED::setSequence(uint16_t *aSequence) {
 bool TalkingLED::update(void) {
   now = millis();
   if (sequence) {
-    if (now < nextChangeTime)
+    if (now < changeTime)
       return false;
     else {
       if (*sequence) {
         LEDStatus ^= 0x1;
         digitalWrite(LEDPin,LEDStatus);
-        nextChangeTime = now + *sequence++;
+        changeTime = now + *sequence++;
         sequenceEnd = false;
         return true;
       }
@@ -84,7 +85,7 @@ bool TalkingLED::update(void) {
     sequenceNext = NULL;
   }
   sequence = sequenceCurrent;
-  nextChangeTime = now;
+  changeTime = now;
   return false;
 }
 
@@ -120,6 +121,8 @@ void TalkingLED::setLED(uint8_t aLEDStatus) {
   sequenceNext = NULL;
   sequenceCurrent = NULL;
   sequence = NULL;
+  sequenceEnd = true;
+  changeTime = millis();
 }
 
 
