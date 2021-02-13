@@ -28,8 +28,6 @@ TalkingLED::TalkingLED(void) {
   LEDRepeater = 0;
   repeaterInverted = false;
   LEDStatus = TLED_OFF;
-  digitalWrite(LEDPin,LEDStatus);
-  pinMode(LEDPin,OUTPUT);
   messageCodeNext = 0;
   messageCodeCurrent = 0;
   sequenceNext = NULL;
@@ -41,12 +39,16 @@ TalkingLED::TalkingLED(void) {
 
 
 bool TalkingLED::begin() {
+  digitalWrite(LEDPin,LEDStatus);
+  pinMode(LEDPin,OUTPUT);
   return true;
 }
 
 
 bool TalkingLED::begin(uint8_t aLEDPin) {
   LEDPin = aLEDPin;
+  digitalWrite(LEDPin,LEDStatus);
+  pinMode(LEDPin,OUTPUT);
   return true;
 }
 
@@ -54,6 +56,8 @@ bool TalkingLED::begin(uint8_t aLEDPin) {
 bool TalkingLED::begin(uint8_t aLEDPin,uint8_t aLEDRepeater,
     bool repeaterInvert= false) {
   LEDPin = aLEDPin;
+  digitalWrite(LEDPin,LEDStatus);
+  pinMode(LEDPin,OUTPUT);
   LEDRepeater = aLEDRepeater;
   repeaterInverted = repeaterInvert;
   _write_repeater();
