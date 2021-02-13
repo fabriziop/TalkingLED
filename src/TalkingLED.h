@@ -6,7 +6,7 @@
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
 .creation   : 3-Dec-2018
-.copyright  : (c) 2018 Fabrizio Pollastri
+.copyright  : (c) 2018-2021 Fabrizio Pollastri
 
 .- */
 
@@ -51,6 +51,7 @@ class TalkingLED {
   TalkingLED(void);
   bool begin();
   bool begin(uint8_t aLEDPin);
+  bool begin(uint8_t aLEDPin,uint8_t aLEDRepeater,bool repeaterInvert=false);
   bool update(void);
   void delay(uint32_t aDelay);
   void setLED(uint8_t aLEDStatus);
@@ -64,6 +65,8 @@ class TalkingLED {
 
  private:
    uint8_t LEDPin;
+   uint8_t LEDRepeater;
+   bool repeaterInverted;
    uint8_t LEDStatus;
    uint16_t messageSequence[28] =
      {50,50,50,50,50,500,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -79,6 +82,7 @@ class TalkingLED {
    uint32_t delayEnd;
    bool sequenceEnd;
    bool _build_message_sequence();
+   bool _write_repeater();
 };
 
 #endif // TALKING_LED_H

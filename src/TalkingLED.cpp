@@ -6,7 +6,7 @@
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
 .creation   : 3-Dec-2018
-.copyright  : (c) 2018 Fabrizio Pollastri
+.copyright  : (c) 2018-2021 Fabrizio Pollastri
 
 .description
 
@@ -25,6 +25,8 @@
 
 TalkingLED::TalkingLED(void) {
   LEDPin = LED_PIN;
+  LEDRepeater = 0;
+  repeaterInverted = false;
   LEDStatus = TLED_OFF;
   digitalWrite(LEDPin,LEDStatus);
   pinMode(LEDPin,OUTPUT);
@@ -45,6 +47,17 @@ bool TalkingLED::begin() {
 
 bool TalkingLED::begin(uint8_t aLEDPin) {
   LEDPin = aLEDPin;
+  return true;
+}
+
+
+bool TalkingLED::begin(uint8_t aLEDPin,uint8_t aLEDRepeater,
+    bool repeaterInvert= false) {
+  LEDPin = aLEDPin;
+  LEDRepeater = aLEDRepeater;
+  repeaterInverted = repeaterInvert;
+  _write_repeater();
+  pinMode(LEDRepeater,OUTPUT);
   return true;
 }
 
@@ -72,6 +85,7 @@ bool TalkingLED::update(void) {
       if (*sequence) {
         LEDStatus ^= 0x1;
         digitalWrite(LEDPin,LEDStatus);
+        _write_repeater();
         changeTime = now + *sequence++;
         sequenceEnd = false;
         return true;
@@ -118,6 +132,7 @@ void TalkingLED::delay(uint32_t aDelay) {
 void TalkingLED::setLED(uint8_t aLEDStatus) {
   LEDStatus = aLEDStatus;
   digitalWrite(LEDPin,LEDStatus);
+  _write_repeater();
   sequenceNext = NULL;
   sequenceCurrent = NULL;
   sequence = NULL;
@@ -182,5 +197,16 @@ bool TalkingLED::_build_message_sequence() {
   sequenceNext = messageSequence;
   return true;
 }
+
+
+bool TalkingLED::_write_repeater() {
+  if (!LEDRepeater)
+    return false;
+  if (repeaterInverted)
+    digitalWrite(LEDRepeater,!LEDStatus);
+  else
+    digitalWrite(LEDRepeater,LEDStatus);
+  return true;
+  }
 
 /**** END ****/

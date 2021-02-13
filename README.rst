@@ -23,7 +23,8 @@ Features
 * Data defined blink sequences
 * Simple cooperative application/TalkingLED interaction model
 * Small numbers (<20) morse-like encoding with intuitive blink sequences 
-* Binary encoding with simple blink sequences for bytes and nibbles 
+* Binary encoding with simple blink sequences for bytes and nibbles
+* Blinking signal can be repeated on a selected pin (off board LED)
 * No multithread needed
 * No interrupts needed
 * No external dependencies
@@ -118,8 +119,8 @@ Blink sequence definition
 
 Blink sequences are defined by arrays of unsigned 16 bits integers.
 Each array element sets the period in milliseconds of a LED status.
-Even index array elements sets the periods of LED on statuses, odd index
-array elements set the periods of LED off statuses. The last element array
+Even index array elements sets the periods of LED on status, odd index
+array elements set the periods of LED off status. The last element array
 must be set to zero as sequence terminator. Since sequence elements are
 unsigned 16 bits integers and zero value is used as terminator, the
 allowable period value range from 1 to 65535 milliseconds. The status
@@ -230,14 +231,40 @@ Objects and methods
   This class embeds all LED blink status info.
 
 
-bool **begin(** uint8_t **LEDPin)**
+bool **begin()**
 
-  This method sets the board pin connected to the LED to be blinked.
-
-  **LEDPin**: number of pin connected to LED.
+  This method init TalkingLED internals and sets the on board LED of the
+  current platform as LED to be blinked.
 
   Returns **true**.
 
+
+bool **begin(** uint8_t **LEDPin)**
+
+  This method init TalkingLED internals and sets the outout pin specified
+  by the user as LED to be blinked.
+
+  **LEDPin**: the number of pin connected to LED.
+
+  Returns **true**.
+
+
+bool **begin(** uint8_t **LEDPin**, uint8_t **aLEDRepeater**, bool **repeaterInverted=false)**
+
+  This method init TalkingLED internals and sets the output pin specified
+  by the user as LED to be blinked. In addition, it sets another output pin
+  where to repeat the blinking signal. The repeated signal can be inverted
+  (default is signal unchanged).
+
+  **LEDPin**: the number of pin connected to LED.
+
+  **aLEDRepeater**: pin number where to repeat the blinking signal.
+
+  **repeaterInverted**: a boolean, if true, repeated signal is logically
+  inverted, otherwise repeated signal is unchanged.
+
+  Returns **true** .
+ 
 
 bool **setMessage(** uint8_t **aMessageCode**,
 enum TalkingLEDMessageType **aMessageType** = TLED_NIBBLE);
@@ -330,6 +357,6 @@ Copyright
 =========
 
 TalkingLED is authored by Fabrizio Pollastri <mxgbot_a_t_gmail.com>,
-years 2018-2020, under the GNU Lesser General Public License version 3.
+years 2018-2021, under the GNU Lesser General Public License version 3.
 
 .. ==== END
