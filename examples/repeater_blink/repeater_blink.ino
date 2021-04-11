@@ -7,6 +7,7 @@
 .site       : Torino - Italy
 .creation   : 13-Feb-2021
 .copyright  : (c) 2021 Fabrizio Pollastri
+.license    : GNU Lesser General Public License
 
 .description
   Same example as basic_blink with repeater.

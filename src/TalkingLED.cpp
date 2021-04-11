@@ -7,6 +7,7 @@
 .site       : Revello - Italy
 .creation   : 3-Dec-2018
 .copyright  : (c) 2018-2021 Fabrizio Pollastri
+.license    : GNU Lesser General Public License
 
 .description
 

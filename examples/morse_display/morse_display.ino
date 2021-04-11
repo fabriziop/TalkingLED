@@ -7,6 +7,7 @@
 .site       : Torino - Italy
 .creation   : 20-Dec-2018
 .copyright  : (c) 2018 Fabrizio Pollastri
+.license    : GNU Lesser General Public License
 
 .description
 

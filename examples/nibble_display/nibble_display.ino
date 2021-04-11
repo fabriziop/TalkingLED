@@ -7,6 +7,7 @@
 .site       : Torino - Italy
 .creation   : 27-Mar-2020
 .copyright  : (c) 2020 Fabrizio Pollastri
+.license    : GNU Lesser General Public License
 
 .description
 

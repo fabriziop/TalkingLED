@@ -241,7 +241,7 @@ bool **begin()**
 
 bool **begin(** uint8_t **LEDPin)**
 
-  This method init TalkingLED internals and sets the outout pin specified
+  This method init TalkingLED internals and sets the output pin specified
   by the user as LED to be blinked.
 
   **LEDPin**: the number of pin connected to LED.
