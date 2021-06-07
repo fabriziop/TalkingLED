@@ -42,7 +42,7 @@ running.
   // application code
   ...
 
-  // instantiate the TalikingLED object TLED
+  // instantiate the TalkingLED object TLED
   #include <TalkingLED.h>
   TalkingLED TLED;
 

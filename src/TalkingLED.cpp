@@ -55,7 +55,7 @@ bool TalkingLED::begin(uint8_t aLEDPin) {
 
 
 bool TalkingLED::begin(uint8_t aLEDPin,uint8_t aLEDRepeater,
-    bool repeaterInvert= false) {
+    bool repeaterInvert) {
   LEDPin = aLEDPin;
   digitalWrite(LEDPin,LEDStatus);
   pinMode(LEDPin,OUTPUT);
