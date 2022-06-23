@@ -6,7 +6,7 @@
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
 .creation   : 3-Dec-2018
-.copyright  : (c) 2018-2021 Fabrizio Pollastri
+.copyright  : (c) 2018-2022 Fabrizio Pollastri
 .license    : GNU Lesser General Public License
 
 .description

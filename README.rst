@@ -28,6 +28,8 @@ Features
 * No multithread needed
 * No interrupts needed
 * No external dependencies
+* Supports AVR328p, ESP8266, ESP32 processors.
+* Tested on arduino nano, nodeMCU 8266, nodeMCU 32S boards.
 
 
 Quick start

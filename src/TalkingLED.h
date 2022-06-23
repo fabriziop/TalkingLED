@@ -6,7 +6,7 @@
 .author     : Fabrizio Pollastri <mxgbot@gmail.com>
 .site       : Revello - Italy
 .creation   : 3-Dec-2018
-.copyright  : (c) 2018-2021 Fabrizio Pollastri
+.copyright  : (c) 2018-2022 Fabrizio Pollastri
 .license    : GNU Lesser General Public License
 
 .- */
@@ -21,7 +21,7 @@
   #define TLED_ON HIGH
   #define TLED_OFF LOW
   #define LED_PIN 13
-#elif ESP8266
+#elif defined(ESP8266) || defined(ESP32)
   #define TLED_ON LOW
   #define TLED_OFF HIGH
   #define LED_PIN 2
